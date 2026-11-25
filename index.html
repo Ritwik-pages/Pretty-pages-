@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f8dce9">
+<title>Pretty Pages — Little things, lovely days</title>
+<style>
+:root{--pink:#f8dce9;--rose:#984c70;--lav:#e9ddf8;--cream:#fff8f2;--ink:#57384a;--muted:#8c7180;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:#fffafd;color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+header{position:sticky;top:0;z-index:5;background:#fffafdF2;backdrop-filter:blur(12px);border-bottom:1px solid #f3e3eb}
+.nav{max-width:1050px;margin:auto;padding:13px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-family:Georgia,serif;font-size:25px;font-weight:bold;color:var(--rose);letter-spacing:.2px}.tag{font-size:11px;color:var(--muted)}
+button{border:0;border-radius:999px;padding:11px 16px;background:var(--rose);color:white;font-weight:650;cursor:pointer}
+button.secondary{background:#f7e8ef;color:var(--rose)}button:disabled{opacity:.5;cursor:not-allowed}
+main{max-width:1050px;margin:auto;padding:20px 18px 50px}
+.hero{background:linear-gradient(120deg,#f8dce9,#eee5fb 70%,#fff4e9);border-radius:25px;padding:28px 24px;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:15px;overflow:hidden}
+.hero h1{font-family:Georgia,serif;font-size:clamp(32px,6vw,52px);line-height:1.04;color:var(--rose);margin:8px 0}.hero p{max-width:390px;line-height:1.6;color:#79566a}.hero-art{font-size:clamp(70px,15vw,130px);text-align:center;filter:drop-shadow(0 10px 8px #b87a9633)}
+.pill{display:inline-block;background:#fff9;border-radius:99px;padding:7px 12px;font-size:12px;color:var(--rose);font-weight:700}
+h2{font-family:Georgia,serif;color:var(--rose);margin:28px 0 14px;font-size:26px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 18px}
+input,select,textarea{width:100%;border:1px solid #ecd9e3;background:white;border-radius:13px;padding:12px 13px;color:var(--ink);font:inherit;outline-color:#d78eae}
+.search{flex:1;min-width:190px}.filters{display:flex;gap:7px;flex-wrap:wrap}.filters button{padding:9px 13px;background:#f6e8ef;color:var(--rose);font-size:13px}.filters button.active{background:var(--rose);color:white}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:white;border:1px solid #f1e1e9;border-radius:19px;padding:12px;box-shadow:0 5px 18px #8b506010}.photo{height:125px;border-radius:14px;background:linear-gradient(135deg,#fbe5ee,#f1eafa);display:grid;place-items:center;font-size:55px}.card h3{font-size:15px;margin:10px 0 4px}.price{font-weight:750;color:var(--rose);margin-bottom:10px}.card button{width:100%;padding:9px;font-size:13px}
+.note{font-size:12px;color:var(--muted);line-height:1.5}
+.panel{background:white;border:1px solid #f0dfe7;border-radius:20px;padding:17px;margin-top:18px}
+.cartline{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f4e8ee}.qty{display:flex;align-items:center;gap:8px}.qty button{padding:5px 10px}.total{display:flex;justify-content:space-between;font-weight:800;font-size:19px;color:var(--rose);padding:14px 0}
+form{display:grid;gap:11px}.formrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:25px 12px}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#57384a;color:white;padding:11px 17px;border-radius:99px;display:none;z-index:10;font-size:13px}
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr .55fr;padding:22px 17px}.hero-art{font-size:72px}.photo{height:112px}}
+@media(max-width:390px){.hero{grid-template-columns:1fr}.hero-art{display:none}.formrow{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="nav"><div><div class="brand">Pretty Pages ♡</div><div class="tag">little things, lovely days</div></div><button class="secondary" onclick="document.querySelector('#cart').scrollIntoView({behavior:'smooth'})">🛍️ Cart <span id="cartCount">0</span></button></div></header>
+<main>
+<section class="hero"><div><span class="pill">A little joy in every order</span><h1>Make your day<br>a little cuter!</h1><p>Discover pretty stationery for notes, plans, gifts and all your creative moments.</p><button onclick="document.querySelector('#shop').scrollIntoView({behavior:'smooth'})">Explore the shop ♡</button></div><div class="hero-art" aria-hidden="true">🎀📒🌷</div></section>
+<section id="shop"><h2>Shop our collection</h2><div class="toolbar"><input class="search" id="search" placeholder="Search stationery..." oninput="renderProducts()"><div class="filters" id="filters"></div></div><div class="grid" id="products"></div><p class="note">Sample products and prices for the prototype. Replace these with your actual wholesale stock and prices before launching.</p></section>
+<section class="panel" id="cart"><h2 style="margin-top:0">Your shopping bag ♡</h2><div id="cartItems"><p class="note">Your bag is waiting for something lovely.</p></div><div class="total"><span>Total</span><span id="total">₹0</span></div><button id="checkoutBtn" onclick="showCheckout()" disabled>Continue to checkout</button></section>
+<section class="panel" id="checkout" hidden><h2 style="margin-top:0">Checkout</h2><p class="note">Demo checkout only. This form does not send orders or collect payments yet.</p><form id="orderForm"><div class="formrow"><input name="name" placeholder="Your name" required><input name="phone" placeholder="Phone number" inputmode="tel" required></div><textarea name="address" rows="3" placeholder="Full delivery address" required></textarea><select name="payment"><option value="Pay on confirmation">Payment to be arranged after confirmation</option><option value="Cash on delivery (if available)">Cash on delivery (if available)</option></select><button type="submit">Place demo order ♡</button></form><div id="confirmation" class="note" role="status"></div></section>
+</main>
+<footer>Made with ♡ for Pretty Pages · Demo storefront</footer><div id="toast"></div>
+<script>
+const products=[
+{id:1,name:"Cute Sticker Sheets",price:20,cat:"Stickers",emoji:"🌸"},
+{id:2,name:"Pretty Gel Pens",price:20,cat:"Pens",emoji:"🖊️"},
+{id:3,name:"Floral Bookmarks",price:20,cat:"Bookmarks",emoji:"🌷"},
+{id:4,name:"Pastel Washi Tape",price:30,cat:"Washi Tape",emoji:"🎀"},
+{id:5,name:"Mini Note Set",price:35,cat:"Notebooks",emoji:"📒"},
+{id:6,name:"Study Planner",price:45,cat:"Notebooks",emoji:"📝"}
+];
+let cart=JSON.parse(localStorage.getItem("pp-cart")||"{}"),category="All";
+const cats=["All","Stickers","Pens","Bookmarks","Washi Tape","Notebooks"];
+document.getElementById("filters").innerHTML=cats.map(c=>`<button class="${c===category?'active':''}" onclick="setCategory('${c}')">${c}</button>`).join("");
+function setCategory(c){category=c;document.querySelectorAll(".filters button").forEach(b=>b.classList.toggle("active",b.textContent===c));renderProducts()}
+function renderProducts(){let q=document.getElementById("search").value.toLowerCase();let list=products.filter(p=>(category==="All"||p.cat===category)&&p.name.toLowerCase().includes(q));document.getElementById("products").innerHTML=list.map(p=>`<article class="card"><div class="photo">${p.emoji}</div><h3>${p.name}</h3><div class="price">₹${p.price}</div><button onclick="add(${p.id})">＋ Add to cart</button></article>`).join("")||'<p class="note">No products found. Try another search.</p>'}
+function save(){localStorage.setItem("pp-cart",JSON.stringify(cart));renderCart()}
+function add(id){cart[id]=(cart[id]||0)+1;save();toast("Added to your bag ♡")}
+function change(id,n){cart[id]=(cart[id]||0)+n;if(cart[id]<=0)delete cart[id];save()}
+function renderCart(){let entries=products.filter(p=>cart[p.id]);let count=Object.values(cart).reduce((a,b)=>a+b,0),sum=entries.reduce((a,p)=>a+p.price*cart[p.id],0);document.getElementById("cartCount").textContent=count;document.getElementById("total").textContent="₹"+sum;document.getElementById("checkoutBtn").disabled=count===0;document.getElementById("cartItems").innerHTML=entries.length?entries.map(p=>`<div class="cartline"><div><b>${p.name}</b><div class="note">₹${p.price} each</div></div><div class="qty"><button class="secondary" onclick="change(${p.id},-1)">−</button><b>${cart[p.id]}</b><button onclick="change(${p.id},1)">＋</button></div><b>₹${p.price*cart[p.id]}</b></div>`).join(""):'<p class="note">Your bag is waiting for something lovely.</p>'}
+function showCheckout(){document.getElementById("checkout").hidden=false;document.getElementById("checkout").scrollIntoView({behavior:"smooth"})}
+document.getElementById("orderForm").addEventListener("submit",e=>{e.preventDefault();let data=Object.fromEntries(new FormData(e.target));let summary=products.filter(p=>cart[p.id]).map(p=>`${p.name} x ${cart[p.id]}`).join(", ");document.getElementById("confirmation").textContent=`Demo order prepared for ${data.name}: ${summary}. Total ₹${products.reduce((a,p)=>a+p.price*(cart[p.id]||0),0)}. Nothing has been sent or charged.`;});
+function toast(s){let t=document.getElementById("toast");t.textContent=s;t.style.display="block";setTimeout(()=>t.style.display="none",1600)}
+renderProducts();renderCart();
+</script>
+</body></html>
